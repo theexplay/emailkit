@@ -1,0 +1,85 @@
+-
+  // Аналог $.extend() для создания одного объекта без дубликатов.
+  var removeDuplicates = function(...objs){
+    return Object.assign({}, ...objs);
+  };
+
+  // Создать объект из строки "стилей"
+  var convert2object = function(string) {
+    if (!string) {
+      return false;
+    }
+
+    let result = {};
+
+    string.split(/\s*\;\s*/).forEach((el) => {
+      if (!!el.length) {
+        let parts = el.split(/\s*:\s*/); result[parts[0]] = parts[1];
+      }
+    });
+
+    return result;
+  };
+
+  // Создать строку из объекта "стилей"
+  var convert2string = function(object) {
+    if (!object) {
+      return false;
+    }
+    return Object.keys(object).map((key) => (`${key}:${object[key]}`)).join(';');
+  };
+
+  var preventLink = function($text) {
+    let word = '';
+    for (let i of $text) {
+      word += `${i}\u200C`
+    }
+    return word;
+  };
+
+  var escapeUrlAmps = function(url) {
+      return url.replace(/&/g, '&amp;').replace(/&amp;amp;/, '&amp;');
+  };
+
+  var rgba = function(hex, lum) {
+    hex = String(hex).replace(/[^0-9a-f]/gi, '');
+
+    if (hex.length < 6) {
+      hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+    }
+
+    lum = lum || 0;
+    var rgb = "#", c, i;
+
+    for (i = 0; i < 3; i++) {
+      c = parseInt(hex.substr(i*2,2), 16);
+      c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+      rgb += ("00"+c).substr(c.length);
+    }
+
+    return rgb;
+  };
+
+  var objToString = function(obj) {
+    var str = '';
+    for (var p in obj) {
+      if (obj.hasOwnProperty(p)) {
+        str += p + ':' + obj[p] + ';';
+      }
+    }
+    return str;
+  };
+
+  var smartUpperCase = function(string, noTwigUpperFilter = false) {
+    var twigMask = /({[{%][^}]+[}%]})/;
+    var chunkToUpper = function (item) {
+      return twigMask.test(item) ?
+        (noTwigUpperFilter ? item : item.replace(/}}$/, '|upper}}')) :
+        item.toUpperCase();
+    };
+    return string.split(twigMask).map(chunkToUpper).join('');
+  };
+
+  var noTwigBranches = function(string) {
+    return string.replace('{{', '').replace('}}', '');
+  };

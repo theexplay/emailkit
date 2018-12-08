@@ -1,0 +1,26 @@
+extends modules/_base
+
+append vars
+  - $title = "Тестовое письмо!"
+  - $_c__bgColor = $_c__blue_1
+
+block content
+  +spacer(24)(rootTag="table")
+  +inlineSubject() Тема приветсвенного письма
+
+  +table("100%")(style=`max-width: ${$_l__content_width}px;`)
+    +text($_t__h1)(rootTag="tr" align="center" style=`color: ${$_c__green}`) Заголовок
+    +spacer(16)
+    +text($_t__20_24_regular_bold)(rootTag="tr" style=`color: ${$_c__white}`) Какой-то промо текст, для привлчения внимания, может быть оооооооооооооооооооочень длинным
+    +spacer(16)
+
+  +bgBlock("https://via.placeholder.com/610x400.jpg", $_c__blue_1)(width="100%" height=400 rootTag="table" rootTagStyle=`max-width: ${$_l__canvas_width}px;`)
+    +table("95%")
+      +spacer(16)
+      +text($_t__16_20_bold_normal)(rootTag="tr" align="center") Блок c текстом по центру поверх фонового изображения
+      +spacer(24)
+      tr: +td: +table("100%"): tr
+        +text($_t__16_20_bold_normal)(rootTag="td" align="left") Блок c текстом слева
+        +text($_t__16_20_bold_normal)(rootTag="td" align="right") Блок c текстом справа
+      +spacer(100)
+      +button("https://ya.ru/", button__style_red, button__text_size_default)(rootTag="tr" width=226 height=40) Открыть ссылку

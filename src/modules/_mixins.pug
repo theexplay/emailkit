@@ -1,0 +1,597 @@
+//- @pugdoc
+  name: table
+  description: Блочный миксин для создания обёртки в виде таблицы.
+  arguments:
+    - {number} [width] - ширина таблицы
+    - {number} [height] - высота таблицы
+  attributes:
+    - {string} [align = center] - центрирование самой таблицы
+    - {string} [bgcolor = transparent] - фоновый цвет таблицы
+    - {string} [style] - любые стили
+  examples:
+    - |
+      +table(610): tr: td: span привет мир
+      // break
+    - |
+      +table('100%'): tr: td таблица занимает 100%
+      // break
+    - |
+      +table(610, 240)
+      // break
+    - |
+      +table(610)(align="right" bgcolor="#ffffff")
+      // break
+mixin table(width, height)
+  include _helpers
+
+  - var attr = attributes;
+  - var $align = attr.align ? attr.align : 'center'
+  - var $bgcolor = attr.bgcolor ? attr.bgcolor : 'transparent'
+
+  table(width!=(width || attributes.width) height!=(height || attributes.height) align=$align cellpadding='0' cellspacing='0' border='0' bgcolor!=$bgcolor style!=convert2object(attr.style) class!=attributes.class)
+    block
+
+//- @pugdoc
+  name: td
+  description: Блочный миксин для создания обёртки в виде <code>+td()</code>, отцентрированной по top
+  attributes:
+    - {string} [valign = top] - вертикальное центрирование ячейки
+  examples:
+    - |
+      +td()(valign="bottom" width="200" height="100") Тут что-то не так
+      // break
+    - |
+      +td(): div Текст внутри div'a, который внутри td
+      // break
+mixin td(fontData)
+  -
+    var $valign = attributes.valign ? attributes.valign : 'top';
+    delete attributes.rootTag;
+    delete attributes.tdStyle;
+    //let baseStyles = {
+      //'font-size': '1px',
+      //'line-height': '0',
+      //'font-weight': 'normal',
+      //'mso-line-height-alt': fontData ? fontData['line-height'] : 0,
+      //'mso-margin-top-alt': fontData ? fontData['line-height'] : 0
+    //}
+
+    //let incomeStyles = Object.assign({}, fontData);
+    //splitStyles = Object.assign(baseStyles, incomeStyles);
+
+  td(valign=$valign)&attributes(attributes)
+    block
+
+//- @pugdoc
+  name: rootTag
+  description: Блочный миксин для генерации обёртки разного уровня вложенности. Аттрибуты применяются к <code>table/td/a</code>. Использовать можно любые аттрибуты и их значения, также как и в <code>+table</code>.
+  arguments:
+    - {string} [tag] - Используемый корневой тег
+  attributes:
+    - {number} [width] - Ширина таблицы/ячейки
+    - {number} [height] - Высота таблицы/ячейки
+    - {any} [attrs] - Можно передавать любой аттрибут, с любым именем и значением. Применятся только к таблице. Актуально если хотим поменять фоновый цвет, рутовой таблицы
+  examples:
+    - |
+      include _mixins
+      +rootTag('table') текст
+      // break
+    - |
+      include _mixins
+      +rootTag('table')(bgcolor="red") текст
+      // break
+    - |
+      include _mixins
+      +rootTag('tr') текст
+      // break
+    - |
+      include _mixins
+      +rootTag('td') текст
+      // break
+mixin rootTag(tag, fontData)
+
+  case tag
+    when "table"
+      +table(attributes.width, attributes.height)&attributes(attributes)
+        tr
+          +td(fontData)(width!=attributes.width height!=attributes.height style!=attributes.tdStyle)&attributes(tdattributes)
+            block
+    when "tr"
+      tr
+        +td(fontData)(width!=attributes.width height!=attributes.height style!=attributes.tdStyle)&attributes(attributes)
+          block
+    when "td"
+      +td(fontData)(style!=attributes.tdStyle)&attributes(attributes)
+        block
+    when "a"
+      a()&attributes(attributes)
+        block
+    default
+      block
+
+//- @pugdoc
+  name: bgBlock
+  description: Миксин обёртка, используется для генерации тегов в виде <code>tr</code> и <code>table</code> для <code>+tdBgBlock()</code> без передачи лишних аттрибутов.<br><br>Генерит блок с фоновым изображением и vml вставкой для Outlook.<br><br>Из нюансов, когда мы используем <code>rootTag="tr"</code> или <code>rootTag="td"</code> то ширина может быть не такой, как ожидается. Происходит это из-за стандартного поведения <code>tr</code> и <code>td</code> в таблице и также зависит от их количества. Самый простой способ исправить это, обернуть в <code>+table()</code>.
+  arguments:
+    - {string} [image] - Ссылка на картинку
+    - {string} [fallbackColor] - Фоновый цвет блока, если картинка не отображается
+  attributes:
+    - {number} [width] - Ширина таблицы/ячейки
+    - {number} [height] - Высота таблицы/ячейки
+    - {any} [attrs] - Можно передавать любой аттрибут, с любым именем и значением. Применятся только к +td()
+  examples:
+    - |
+      include _mixins
+      +bgBlock('https://link.com/image.jpeg', '#000')(width=500 height=420 rootTag="table")
+        +table(): tr: +td Внутри bgBlock может находиться любой контент. Так как "входная" разметка, обёрнута в div
+      // break
+    - |
+      include _mixins
+      +table: tr
+        +td какой то контент, в соседней ячейке
+        +bgBlock('https://link.com/image.jpeg', '#000')(width=300 height=220 rootTag="td")
+          span Внутри bgBlock может находиться любой контент. Так как "входная" разметка, обёрнута в div
+        +td какой то контент, в соседней ячейке
+      // break
+    - |
+      include _mixins
+      +table(600)
+        tr: +td: span Какая то строка с контентом
+        +bgBlock('https://link.com/image.jpeg', '#000')(width=300 height=220 rootTag="tr")
+        tr: +td: span Какая то строка с контентом
+      // break
+mixin bgBlock(image, fallbackColor, fitToContent)
+  include _helpers
+
+  - let rootTag = attributes.rootTag ? attributes.rootTag : '';
+  //-
+    TODO Разобраться с обёрткой для rootTag( tr, td )
+  case rootTag
+    when "table"
+      +table()(width=attributes.width height=attributes.height style!=attributes.rootTagStyle): tr: +tdBgBlock(image, fallbackColor, fitToContent)&attributes(attributes): block
+    when "tr"
+      tr: +tdBgBlock(image, fallbackColor, fitToContent)&attributes(attributes): block
+    when "td"
+      +tdBgBlock(image, fallbackColor, fitToContent)&attributes(attributes): block
+    default
+      - return false
+
+//- @pugdoc
+  name: tdBgBlock
+  description: Блочный миксин для генерации +td блоков с фоновой картинкой и vml фалбеком для Outlook.
+  arguments:
+    - {string} [image] - Ссылка на картинку
+    - {string} [fallbackColor] - Фоновый цвет блока, если картинка не отображается
+  attributes:
+    - {number} [width] - Ширина таблицы/ячейки
+    - {number} [height] - Высота таблицы/ячейки
+    - {any} [attrs] - Можно передавать любой аттрибут, с любым именем и значением. Применятся только к +td()
+  examples:
+    - |
+      include _mixins
+      +tdBgBlock('https://ya.ru/image.jpeg', '#fff')(width=200 height=100)
+        span Внутри bgBlock может находиться любой контент. Так как "входная" разметка, обёрнута в div
+      // break
+    - |
+      include _mixins
+      +tdBgBlock('https://ya.ru/image.jpeg', '#fff')(width=200 height=100)
+        +table: tr: +td: a(href='#') Внутри bgBlock может находиться любой контент. Так как "входная" разметка, обёрнута в div
+      // break
+mixin tdBgBlock(image, fallbackColor, fitToContent = false)
+  -
+    var $styles = {};
+    var $stylesStroke = '';
+    attributes.width ? $styles.width = attributes.width : null;
+    attributes.height ? $styles.height = attributes.height : null;
+
+    for (var i in $styles)
+    if (typeof +$styles[i] === 'number' && !isNaN(+$styles[i])) {
+    $stylesStroke+=`${i}:${$styles[i]}px;`;
+    } else {
+    $stylesStroke+=`${i}:${$styles[i]};`;
+    }
+
+  +td()(background=image bgcolor=fallbackColor style="background-repeat:no-repeat;background-position: center;")&attributes(attributes)
+    +ifMso()
+      <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="#{$stylesStroke}">
+      <v:fill type="tile" src="#{image}" color="#{fallbackColor}" />
+      <v:textbox style="mso-fit-shape-to-text:#{fitToContent}" inset="0,0,0,0">
+    if fitToContent
+      div(): block
+    else
+      div(style=`height:${attributes.height}px;`): block
+    +ifMso()
+      <p style="margin:0;mso-hide:all"><o:p xmlns:o="urn:schemas-microsoft-com:office:office">&nbsp;</o:p></p>
+      </v:textbox>
+      </v:rect>
+
+//- @pugdoc
+  name: button
+  description: Блочный миксин для генерации кнопок. <br><br> В отличии от <code>+buttonVML()</code>, эту кнопку можно вкладывать в <code>+bgBlock()</code>. Так как она создаёт обычную стилизованную таблицу.</span>. Также есть пресеты, готовых кнопок. <code>button__style_red, button__text_size__default</code> <br> Пресеты для buttonVML и button, одинаковые.
+  arguments:
+    - {string} link - Ссылка на кнопке
+    - {...object} styleConfig - Стили для кнопки в виде объекта, или нескольких объектов через запятую. Ключи пишем в стиле camelCase.
+  attributes:
+    - {number} width - Ширина кнопки
+    - {number} [height] - Высота кнопка
+    - {string} [rootTag] - при передачи строки, вызывается миксин rootTag, который создаёт обёртку, вокруг таблицы, которая является кнопкой.
+  examples:
+    - |
+      include _helpers
+      include _colors
+      include _mixins
+      +button('#link.to.content', {
+        "borderRadius": 4,
+        "borderColor": $_c__black,
+        "bgColor": $_c__violet,
+        "textColor": $_c__red,
+        "fontSize": "10px"
+      })(rootTag="table" width=400 height="40") привет мир
+      // break
+    - |
+      include _helpers
+      include _colors
+      include _presets
+      include _mixins
+      +button('#', button__style_red, button__text_size__default)(width=196 height=40 rootTag="table") Оформить предзаказ
+      // break
+    - |
+      include _helpers
+      include _colors
+      include _presets
+      include _mixins
+      +button('#', button__style_red, button__text_size__default)(width=196 height=40 rootTag="td")
+        img(src="#" alt="иконка")
+        | &nbsp;Оформить предзаказ
+      // break
+    - |
+      include _helpers
+      include _colors
+      include _presets
+      include _mixins
+      tr: +button('#', button__style_outline_violet, button__text_size__default)(width=196 height=40 rootTag="td") Оформить предзаказ
+      // break
+mixin button(link, ...buttonStyle)
+  -
+    var rootTag = attributes.rootTag ? attributes.rootTag : '';
+    var tempStyles = buttonStyle
+    buttonStyle = {}
+    tempStyles.forEach(item => Object.assign(buttonStyle, item));
+    var hasBorder = !!buttonStyle.borderColor
+    var border = hasBorder ? `border: 1px solid ${buttonStyle.borderColor};` : '';
+    var $w = attributes.width;
+    var $h = attributes.height;
+
+  if hasBorder
+    - $h = $h - 2
+    - $w = $w - 2
+
+  +rootTag(rootTag)(align!=attributes.align)
+    +table($w, $h)&attributes(attributes): tr
+      +td()(valign="middle" width=$w height=$h align="center" bgcolor=buttonStyle.bgColor style=`border-radius: ${buttonStyle.borderRadius}px; color: ${buttonStyle.textColor}; display: block;${border}`)
+        a(href=link style=`font-size:${buttonStyle.fontSize}; text-decoration: none; line-height:${$h}px; width:100%; display:inline-block;${objToString($_t__font)}`)
+          span(style=`color:${buttonStyle.textColor};`)
+            block
+
+//- @pugdoc
+  name: buttonVML
+  description: Блочный миксин для генерации кнопок с использованием VML тегов для Desktop Outlook. <br><br> <span class="warning">Нельзя вкладывать в <code>+bgBlock()</code>.</span> Если надо вывести кнопку, поверх блока с фоновым изображением, используйте миксин <code>+button()</code>. Также есть пресеты, готовых кнопок. <code>button__style_red, button__text_size__default</code>
+  arguments:
+    - {string} link - Ссылка на кнопке
+    - {...object} styleConfig - Стили для кнопки в виде объекта, или нескольких объектов через запятую. Ключи пишем в стиле camelCase.
+  attributes:
+    - {number} width - Ширина кнопки
+    - {number} [height] - Высота кнопка
+    - {string} [rootTag] - при передачи строки, вызывается миксин rootTag, который создаёт обёртку.
+  examples:
+    - |
+      include _colors
+      include _mixins
+      include _typography
+      +buttonVML('#link.to.content', {
+                "borderRadius": 4,
+                "height": 40,
+                "width": 400,
+                "borderColor": $_c__black,
+                "bgColor": $_c__violet,
+                "textColor": $_c__red,
+                "fontSize": "10px"
+              })(rootTag="table") привет мир
+      // break
+    - |
+      include _colors
+      include _mixins
+      include _typography
+      - var buttonStyles = { "borderRadius": 4, "height": 40, "width": 400, "borderColor": $_c__black, "bgColor": $_c__violet, "textColor": $_c__red, "fontSize":"12px"}
+      +buttonVML('#link.to.content', Object.assign(buttonStyles, $_t__primary_text))(rootTag="table") привет мир
+      // break
+    - |
+      include _presets
+      include _mixins
+      include _typography
+      +buttonVML('#', button__style_red, button__text_size_default)(width=196 rootTag="table") Оформить предзаказ
+      // break
+    - |
+      include _presets
+      include _mixins
+      include _typography
+      tr: +buttonVML('#', button__style_outline_violet, button__text_size_default)(width=196 rootTag="td") Оформить предзаказ
+      // break
+    - |
+      include _presets
+      include _mixins
+      include _typography
+      +buttonVML('#', button__style_violet, button__text_size_default)(width=196 rootTag="td")
+        img(src="#" alt="иконка")
+        | &nbsp;Оформить предзаказ
+      // break
+mixin buttonVML(link, ...styleConfig)
+  include _helpers
+
+  -
+    var temp = styleConfig;
+    styleConfig = {}
+    temp.forEach(item => Object.assign(styleConfig, item));
+
+  -
+    var hasBorder = !!styleConfig["borderColor"];
+    var width = styleConfig.width ? styleConfig.width+'px':attributes.width+'px';
+    var height = styleConfig.height ? (hasBorder ? (styleConfig.height - 2):styleConfig.height)+'px':(hasBorder ? (attributes.height - 2):attributes.height)+'px';
+    var figure = hasBorder ? 'roundrect': 'rect'
+    var rootTag = attributes.rootTag ? attributes.rootTag : '';
+    var linkStyle = {
+    "background-color": styleConfig.bgColor,
+    "color": styleConfig.textColor,
+    "display": "inline-block",
+    "line-height": height,
+    "width": width,
+    "text-align": "center",
+    "text-decoration": "none",
+    "border-radius": styleConfig.borderRadius+'px',
+    "-webkit-text-size-adjust": "none",
+    "font-family": $_t__font['font-family'],
+    "font-size": styleConfig.fontSize
+    }
+
+  if hasBorder
+    -
+      var linkRounded = {
+      "border": "1px solid "+styleConfig.borderColor,
+      "mso-hide":"all"
+      }
+      var centerStyles = {
+      "font-family": $_t__font['font-family'],
+      "color": styleConfig.textColor,
+      "font-size": styleConfig.fontSize
+      }
+      var arcsize = (styleConfig.borderRadius * 100) / styleConfig.height+'%'
+      Object.assign(linkStyle, linkRounded);
+
+  +rootTag(rootTag)(width!=width height!=height)
+    div
+      +ifMso()
+        <v:#{figure} xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="#{link}" style="height:#{height};v-text-anchor:middle;width:#{width};"  fillcolor="#{styleConfig.bgColor}" #{hasBorder ? `strokecolor='${styleConfig.borderColor}'`:`stroke='f'`} #{hasBorder ? 'arcsize='+arcsize:''} >
+        <w:anchorlock/>
+        if hasBorder
+          <center #{`style=${objToString(centerStyles)}`} >
+            block
+      if !hasBorder
+        +link(link, style)(style=linkStyle): block
+        +ifMso()
+          </center>
+          </v:#{figure}>
+      if hasBorder
+        +link(link, style)(style=linkStyle): block
+
+//- @pugdoc
+  name: ifMso
+  description: Обёртка для элементов, которые должны отображаться только в Desktop Outlook 2000+.
+  attributes:
+    - {string} [rootTag] - при передачи строки, вызывается миксин rootTag, который создаёт обёртку.
+    - {number} [width] - ширина таблицы/ячейки, передаёт значения в rootTag
+    - {number} [height] - высота таблицы/ячейки, передаёт значения в rootTag
+  examples:
+    - |
+      include _mixins
+      +ifMso()
+        a(href='#') Эта ссылка появится только в десктоп оутлуке
+      // break
+    - |
+      include _mixins
+      +ifMso()(rootTag="table" width="200" height="100")
+        span Эта таблица с текстом будет только в десктоп оутлуке
+      // break
+mixin ifMso(str)
+
+  - let rootTag = attributes.rootTag ? attributes.rootTag : '';
+
+  |<!--[if mso]>
+  +rootTag(rootTag)(width!=attributes.width height!=attributes.height)
+    if str
+      str
+    else
+      block
+  |<![endif]-->
+
+//- @pugdoc
+  name: link
+  description: Генерит обычную ссылку, со стилями по умолчанию, которая не должна подчёркиваться.<br><br>Дополнительно, можно 'прошить' текст, спец. символами. Актуально для некоторых ios клиентов.
+  arguments:
+    - {string} href - Ссылка на контент
+    - {object} [size] - Размер текста в виде объекта. Есть гайды размеров.
+    - {string} [string] - Текст для прошивания спец. символами. Используется впаре с preventLink
+  attributes:
+    - {string} [style] - дополнительные стили для текста.
+    - {boolean} [preventLink] - Обфусцировать текст спец. символами. Работает только если передать строку через аргумент string
+  examples:
+    - |
+      include _mixins
+      +link('https://www.some-link.ru/') Текст ссылки
+      // break
+    - |
+      include _mixins
+      +link('https://www.some-link.ru/', $_t__secondary_text, true, 'Текст ссылки')
+      // break
+    - |
+      include _mixins
+      +link('https://www.some-link.ru/', {}, 'https://www.some-link.ru/')(preventLink=true)
+      // break
+    - |
+      include _mixins
+      +link('https://www.some-link.ru/')(style="color:blue;") Текст ссылки
+      // break
+    - |
+      include _mixins
+      +link('https://www.some-link.ru/', $_t__secondary_text)(style="color:blue;") Текст ссылки
+      // break
+mixin link(href, size = null, string)
+  include _helpers
+
+  +text(size)(href!=escapeUrlAmps(href) rootTag="a" rootTagStyles="text-decoration: none;" style!=attributes.style)
+    if attributes.preventLink
+      | #{preventLink(string)}
+    else
+      block
+
+//- @pugdoc
+  name: spacer
+  description: Универсальный блок для создания распорок между элементами, по вертикали и горизонтали.
+  arguments:
+    - {number} offset - Размер отступа
+    - {boolean} [horizontal = false] - По умолчанию генерим вертикальные отступы
+  examples:
+    - |
+      include _mixins
+      +spacer(20)
+      // break
+    - |
+      include _mixins
+      +spacer(34, true)
+      // break
+    - |
+      include _mixins
+      +spacer(20)(rootTag="table")
+      // break
+mixin spacer(offset, horizontal, bgDefaultColor)
+  include _helpers
+
+  - let $common = { "font-size":"0", "line-height":"0" }
+  - let $styles = removeDuplicates({}, $common, convert2object("display:block;"))
+  - let rootTag = attributes.rootTag ? attributes.rootTag : horizontal ? 'td' : 'tr'
+  - let $width = horizontal ? offset : null
+  - let $height = horizontal ? null : offset
+  - let baseBgColor = bgDefaultColor ? bgDefaultColor : 'transparent';
+
+  +rootTag(rootTag)(height=$height width=$width style=$common bgcolor=baseBgColor)&attributes(attributes)
+    div(style=`overflow:hidden;font-size:0;line-height:0;background-color:${baseBgColor}; ${$height ? 'height:'+$height+'px;': ''}${$width ? 'width:'+$width+'px;': ''}${attributes.style ? attributes.style: ''}`)
+      font(size="0" style=`font-size:0px;line-height:0px;display:block;background-color:${baseBgColor};mso-line-height-alt:0;mso-margin-top-alt:0;`)
+        span(style=`font-size:0px;line-height:0px;display:block;background-color:${baseBgColor};mso-line-height-alt:0;mso-margin-top-alt:0;`)
+
+//-@pugdoc
+  name: text
+  description: Блочный миксин для генерации текста.
+  arguments:
+    - {object} size - размер текста
+    - {string} [text] - Контент. Можно передать как аргумент или block
+  attributes:
+    - {string} [rootTag] - вызов миксина, для создания обёртки.
+    - {string} [style] - стили для текста
+  examples:
+    - |
+      include _typography
+      include _mixins
+      +text($_t__h1) Текст
+      // break
+    - |
+      include _typography
+      include _mixins
+      +text($_t__h1)(align="right" bgcolor="#ffffff" width="200" rootTag="table") Текст
+      // break
+    - |
+      include _typography
+      include _mixins
+      +text($_t__h3)(rootTag="tr")
+      // break
+    - |
+      include _typography
+      include _mixins
+      +text($_t__secondary_text)(rootTag="table")
+        img(src="linkToImage.jpg" width="20" height="20")
+        | Текст с картинкой
+      // break
+mixin text(size, text)
+  include _helpers
+
+  - let rootTag = attributes.rootTag ? attributes.rootTag : '';
+  - let $styles = removeDuplicates($_t__font, size, convert2object(attributes.style))
+  -
+    let tdStyle = attributes.tdStyle
+    let exactSizing = !!attributes.exactSizing
+    if (exactSizing) {
+      tdStyle = tdStyle || '';
+      tdStyle = removeDuplicates($_t__font, size, convert2object(attributes.tdStyle));
+      tdStyle = convert2string(tdStyle);
+    }
+
+  +rootTag(rootTag, size)(width!=attributes.width height!=attributes.height href!=attributes.href style!=attributes.rootTagStyles valign!=attributes.valign align!=attributes.align bgcolor!=attributes.bgcolor tdStyle!=tdStyle)
+    span(style=$styles).noLink!=text
+      block
+
+//- @pugdoc
+  name: inlineSubject
+  description: Миксин генерит невидимый текст для клиентов, который можно использовать как тему в некоторых клиентах.<br><br>Во всех современный клиентах, текст не отображается в письме, в OWA цвет текста совпадает с цветом фона.
+  arguments:
+    - {string} [theme] - Описание темы
+  examples:
+      - |
+        include _colors
+        include _typography
+        include _mixins
+        +inlineSubject($_t__small)(align="right" bgcolor="#ffffff" width="200") Текст
+        // break
+mixin inlineSubject(theme)
+  +table(0, 0)(bgcolor=$_c__bgColor style="display: none;visibility:hidden; border:none;")
+    tr(width="0" height="0" style='display: none; width:0;max-height:0; height:0; overflow:hidden; float:none; visibility:hidden; border:none;font-size:0; max-height:0; mso-hide: all;')
+      +td: +text($_t__h1)(style=`color:${$_c__bgColor};`)
+        if theme
+          | #{theme}
+        else
+          block
+
+//- @pugdoc
+  name: banner
+  description: Миксин для генерации блока с картинкой. Использует rootTag.
+  arguments:
+    - {number} width - ширина
+    - {number} height - высота
+    - {string} image - путь к картинке
+    - {string} link - ссылка по клику
+    - {string} lineHeightCondition - Параметр для явного определения, какой будет интерлиньяж у ячейки (отвечает за высоту)
+    - {string} imageSize - фактический размер картинки
+  attributes:
+    - {string} [rootTag] - вызов миксина, для создания обёртки.
+    - {string} [align] - горизонтальное выравнивание (как для rootTag, так и для картинки)
+    - {string} [imgAlign] - горизонтальное выравнивание (только для картинки)
+    - {string} [rootAlign] - горизонтальное выравнивание (только для rootTag)
+  examples:
+      - |
+        include _mixins
+        +banner(200, 100, 'https://www.some-link.ru//image.jpg')
+        // break
+      - |
+        include _mixins
+        +banner(200, 100, 'https://www.some-link.ru//image.jpg', null, null, '400x200')(align="top")
+        // break
+mixin banner($width, $height, $image, $link, lineHeightCondition, $imageSize)
+  - var rootTag = attributes.rootTag ? attributes.rootTag : 'table';
+  - var lineHeightCondition = lineHeightCondition ? lineHeightCondition + "px" : 'normal';
+  - var $image = $imageSize ? ($image + '/' + $imageSize + '/') : $image;
+  - var imgAlign = attributes.imgAlign || attributes.align || "top";
+  - var rootAlign = attributes.rootAlign || attributes.align;
+
+  +rootTag(rootTag)(width!=$width height!=$height align!=rootAlign tdStyle=`max-height:${$height}px;line-height:${lineHeightCondition}`)
+    if $link
+      a(href!=escapeUrlAmps($link) style="font-size:0;line-height:0;" target="_blank")
+        img(width=$width height=$height align!=imgAlign src!=$image style!=attributes.style)
+    else
+      img(width=$width height=$height align!=imgAlign src!=$image style!=attributes.style)

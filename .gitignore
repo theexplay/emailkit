@@ -1,0 +1,9 @@
+.git
+.idea
+!build
+build/twig
+build/view
+node_modules
+npm-debug.log
+docs/*.html
+docs/*.json
