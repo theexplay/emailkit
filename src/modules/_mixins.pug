@@ -255,6 +255,7 @@ mixin button(link, ...buttonStyle)
   -
     var rootTag = attributes.rootTag ? attributes.rootTag : '';
     var tempStyles = buttonStyle
+    var linkStyle = attributes.linkStyle
     buttonStyle = {}
     tempStyles.forEach(item => Object.assign(buttonStyle, item));
     var hasBorder = !!buttonStyle.borderColor
@@ -269,7 +270,7 @@ mixin button(link, ...buttonStyle)
   +rootTag(rootTag)(align!=attributes.align)
     +table($w, $h)&attributes(attributes): tr
       +td()(valign="middle" width=$w height=$h align="center" bgcolor=buttonStyle.bgColor style=`border-radius: ${buttonStyle.borderRadius}px; color: ${buttonStyle.textColor}; display: block;${border}`)
-        a(href=link style=`font-size:${buttonStyle.fontSize}; text-decoration: none; line-height:${$h}px; width:100%; display:inline-block;${objToString($_t__font)}`)
+        a(href=link style=`font-size:${buttonStyle.fontSize}; text-decoration: none; line-height:${$h}px; width:100%; display:inline-block;${objToString($_t__font)};${linkStyle ? linkStyle : ''}`)
           span(style=`color:${buttonStyle.textColor};`)
             block
 

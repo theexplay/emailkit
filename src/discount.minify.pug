@@ -1,0 +1,137 @@
+extends modules/_base
+
+append vars
+  - $title = "Your cart is about to expire!"
+  - $_c__bgColor = $_c__white
+  - $_l__content_width = 560
+
+append params
+  style(type='text/css').
+    .out-link {
+      text-decoration: underline;
+      color: #000111;
+      color: #001;
+    }
+    @font-face {
+      font-family: 'GillSans';
+      src: url('https://firebasestorage.googleapis.com/v0/b/test-b069a.appspot.com/o/GillSans.eot?alt=media&token=e1456a71-cd14-489e-b4d6-f4a8326ffdae?#iefix') format('embedded-opentype'), url('https://firebasestorage.googleapis.com/v0/b/test-b069a.appspot.com/o/GillSans.ttf?alt=media&token=1724eaef-7e84-47a7-9467-a40ccf9fd9a8') format('truetype'), url('https://firebasestorage.googleapis.com/v0/b/test-b069a.appspot.com/o/GillSans.svg?alt=media&token=d84dd620-007d-4e72-a184-89fa541ba413#GillSans') format('svg');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'NarzissTextRegular-Italic';
+      src: url('https://firebasestorage.googleapis.com/v0/b/test-b069a.appspot.com/o/fontsNar%2FNarzissTextRegular-Italic.eot?alt=media&token=395e10b9-feec-4edb-a278-637b8e145047?#iefix') format('embedded-opentype'), url('https://firebasestorage.googleapis.com/v0/b/test-b069a.appspot.com/o/fontsNar%2FNarzissTextRegular-Italic.otf?alt=media&token=9468fa04-df8f-42a7-84f3-f57e8c555d2d') format('opentype'),
+      url('https://firebasestorage.googleapis.com/v0/b/test-b069a.appspot.com/o/fontsNar%2FNarzissTextRegular-Italic.woff?alt=media&token=9358dfcf-6099-4b99-bf2c-4da74da18266') format('woff'), url('https://firebasestorage.googleapis.com/v0/b/test-b069a.appspot.com/o/fontsNar%2FNarzissTextRegular-Italic.ttf?alt=media&token=21c426f0-7f69-4192-a29c-f43229a4a031') format('truetype'), url('https://firebasestorage.googleapis.com/v0/b/test-b069a.appspot.com/o/fontsNar%2FNarzissTextRegular-Italic.svg?alt=media&token=78513f24-e3d1-4df6-9199-75295b852fc3#NarzissTextRegular-Italic') format('svg');
+      font-weight: normal;
+      font-style: normal;
+    }
+    @media only screen and (max-width: 450px) {
+      .no-mobile {
+        display: none !important;
+      }
+    }
+  | <!--[if mso]>
+  | <style type="text/css">
+  |   .no-mso {display: none !important;}
+  |   .noLink {font-family: Arial, sans-serif;}
+  | </style>
+  | <![endif]-->
+
+block content
+  +spacer(22)(rootTag="table")
+  | <!--[if mso]>
+  |    <center>
+  |    <table align="center" style="margin: 0 auto;"><tr align="center"><td width="600" align="center" style="margin: 0 auto;">
+  | <![endif]-->
+  div(style=`width:600px;width: 100% !important;max-width:${$_l__content_width}px;margin:0 auto;font-size:0;`)
+    +table($_l__content_width)(bgcolor=$_c__white style=`width: 100% !important;max-width: ${$_l__content_width}px;`)
+      tr: +td: +table($_l__content_width)(bgcolor=$_c__black style=`width: 100% !important;max-width: ${$_l__content_width}px;padding-left: 12px;padding-right: 12px;`)
+        +spacer(49)
+        +text({
+            "font-size": "28px",
+            "line-height": "30px",
+            "font-weight": "normal",
+            "font-style": "normal"
+        })(rootTag="tr" align="center" style=`color: ${$_c__white};font-family: ${$_t__font__narziss};`) Your Cart Is About To Expire!
+        +spacer(8)
+        +text({
+            "font-size": "39px",
+            "line-height": "44px",
+            "font-weight": "normal",
+            "font-style": "normal"
+        })(rootTag="tr" align="center" style=`color: ${$_c__white};font-family: ${$_t__font__narziss};`) CHECKOUT FOR&nbsp;<span style="position:relative;top:-7px;">15</span>%&nbsp;OFF
+        +spacer(41)
+      tr: +td: +table()(style="padding-left: 12px;padding-right:12px;")
+        +spacer(38)
+        +text({
+            "font-size": "18px",
+            "line-height": "24px",
+            "font-weight": "normal",
+            "font-style": "normal"
+        })(rootTag="tr" align="center" style=`color: ${$_c__black};font-family: ${$_t__font__gill};`)
+          | "I can't hold onto your shopping cart any longer! Hurry back to&nbsp;my&nbsp;online store and <b>order now before this offer expires.</b>
+        +spacer(7)
+        +text({
+            "font-size": "18px",
+            "line-height": "24px",
+            "font-weight": "normal",
+            "font-style": "normal"
+        })(rootTag="tr" align="center" style=`color: ${$_c__black};font-family: ${$_t__font__gill};`)
+          | You'll be astonished at the results!"
+        +spacer(49)
+
+      tr: +td: +table($_l__content_width)(style="width: 100% !important;border: 1px solid #000;")
+        +spacer(22)
+        +text({
+            "font-size": "17px",
+            "line-height": "24px",
+            "font-weight": "normal",
+            "font-style": "normal",
+            "letter-spacing": "-0.3px",
+        })(rootTag="tr" align="center" style=`color: ${$_c__black};font-family: ${$_t__font__gill};`)
+          | HERE'S WHAT IS IN YOUR CART
+          br
+          | ENTER CODE XXXXXXXXXX AT CHECKOUT FOR&nbsp;15%&nbsp;OFF*
+        +spacer(28)
+        tr: +td(style="padding-left: 10px;padding-right:10px;" align="center"): div(style="max-width:373px;margin: 0 auto;" align="center"): +table(373)(align="center" style="width: 100% !important; max-width:373px; margin: 0 auto;display: block;")
+          tr: +td: +table()(align="left"): tr
+            +banner(80, 78, 'https://via.placeholder.com/80x78')(rootTag="td")
+            +spacer(28, true)
+            +td()(valign="middle"): +table("100%")(align="left" valign="middle")
+              +text({"font-size": "12px","line-height": "14px","font-weight": "normal","font-style": "normal"})(rootTag="tr" tdStyle="font-size:0;" align="left" style=`color: ${$_c__black};font-family: ${$_t__font__gill};`) PRODUCT NAME
+              +text({"font-size": "12px","line-height": "14px","font-weight": "normal","font-style": "normal"})(rootTag="tr" tdStyle="font-size:0;" align="left" style=`color: ${$_c__black};font-family: ${$_t__font__gill};`) PRODUCT DESCRIPTION
+              +spacer(4)
+              +text({"font-size": "12px","line-height": "14px","font-weight": "normal","font-style": "normal"})(rootTag="tr" tdStyle="font-size:0;" align="left" style=`color: ${$_c__black};font-family: ${$_t__font__gill};`) $PRICE
+        +spacer(33)
+        tr: +td(style="padding-left: 10px;padding-right:10px;" align="center"): div(style="max-width:373px;margin: 0 auto;" align="center"): +table(373)(align="center" style="width: 100% !important; max-width:373px; margin: 0 auto;display: block;")
+          tr: +td: +table()(align="left"): tr
+            +banner(80, 78, 'https://via.placeholder.com/80x78')(rootTag="td")
+            +spacer(28, true)
+            +td()(valign="middle"): +table("100%")(align="left" valign="middle")
+              +text({"font-size": "12px","line-height": "14px","font-weight": "normal","font-style": "normal"})(rootTag="tr" rootTagStyles="font-size:0;" tdStyle="font-size:0;" align="left" style=`color: ${$_c__black};font-family: ${$_t__font__gill};`) PRODUCT NAME
+              +text({"font-size": "12px","line-height": "14px","font-weight": "normal","font-style": "normal"})(rootTag="tr" rootTagStyles="font-size:0;" tdStyle="font-size:0;" align="left" style=`color: ${$_c__black};font-family: ${$_t__font__gill};`) PRODUCT DESCRIPTION
+              +spacer(4)
+              +text({"font-size": "12px","line-height": "14px","font-weight": "normal","font-style": "normal"})(rootTag="tr" rootTagStyles="font-size:0;" tdStyle="font-size:0;" align="left" style=`color: ${$_c__black};font-family: ${$_t__font__gill};`) $PRICE
+        +spacer(33)
+        +button('#', button__style_black, button__text_size_default)(linkStyle=`font-family: ${$_t__font__gill};letter-spacing: -0.25px;font-size:18px;` width=272 height=38 rootTag="tr") COMPLETE YOUR ORDER
+        +spacer(46)
+        +text($_t__12_18_regular_normal)(rootTag="tr" align="center" style=`color: ${$_c__black};letter-spacing:-0.1px;font-family: ${$_t__font__gill};`) Offer expires 6 months from today.
+        +spacer(7)
+        +button('#', button__style_black, button__text_size_default, {height: "43px"})(linkStyle=`font-family: ${$_t__font__gill};letter-spacing: 1px;` width="100%" height=43 rootTag="tr") SHOP THE LATEST >
+
+    +spacer(10)(rootTag="table")
+    +table($_l__content_width)(align="center" style="width: 100% !important;"): tr: +td()(align="center" style=`color: ${$_c__black};font-size: 11px;font-family: ${$_t__font__gill};line-height: 14px;text-align: center;letter-spacing:0.25px;`)
+      | To view your account and loyalty points, please&nbsp;
+      a(href="https://ya.ru/" target="_blank" class="out-link" style="display: inline-block;text-decoration: underline !important; color: #000111 !important;")
+        span(style="text-decoration: underline !important; color: #000111 !important; display: inline-block;")
+          | click here.
+      br
+      | Here, you can easily find answers to your questions or contact us directly.
+      br
+      | Our typical response time is within 48 hours.
+  | <!--[if mso]>
+  |    </td></tr></table>
+  |    </center>
+  | <![endif]-->
+  +spacer(26)(rootTag="table")

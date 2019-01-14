@@ -1,0 +1,45 @@
+extends modules/_base
+
+append vars
+  - $title = "Birthday Treat!"
+  - $_c__bgColor = $_c__white
+  - $_l__content_width = 560
+
+block content
+  +spacer(26)(rootTag="table")
+  +table(600)(bgcolor=$_c__white): tr: +td
+    +table($_l__content_width)(bgcolor=$_c__white style=`border: 1px solid ${$_c__black};`)
+      tr: +td: +table($_l__content_width)(bgcolor=$_c__black)
+        +spacer(26)
+        +text($_t__18_26_regular_normal)(rootTag="tr" align="center" style=`color: ${$_c__white};`) GET YOUR
+        +spacer(4)
+        +text($_t__40_44_bold_normal)(rootTag="tr" align="center" style=`color: ${$_c__white}; font-family: ${$_t__font__georgia};`): i BIRTHDAY TREAT
+        +spacer(8)
+        +text($_t__18_26_regular_normal)(rootTag="tr" align="center" style=`color: ${$_c__white};`) BEFORE IT'S GONE!
+        +spacer(18)
+        tr: +td: +table("62%", 2)(bgcolor=$_c__white)
+        +spacer(22)
+        +text($_t__24_30_regular_normal)(rootTag="tr" align="center" style=`color: ${$_c__white}; family: ${$_t__font__georgia};`): i
+          | Receive DOUBLE LOYALTY POINTS
+          br
+          | On All Purchases
+          br
+          | During Your Birthday Month.*
+        +spacer(30)
+      +spacer(30)
+      +banner(175, 215, 'https://firebasestorage.googleapis.com/v0/b/test-b069a.appspot.com/o/photo5229005310469974610.jpg?alt=media&token=ed0a9981-5484-429f-b98d-a9582970d4cc')(rootTag="tr" align="center" rootAlign="center")
+      +spacer(30)
+      +text($_t__18_26_regular_normal)(rootTag="tr" align="center" style=`color: ${$_c__black};`)
+        | “The party’s almost over, so make sure to earn those points
+        br
+        | and treat yourself to something nice. Happy Birthday!”
+      +spacer(54)
+      +button('#', button__style_black, button__text_size_default)(width=288 height=42 rootTag="tr") GO BIRTHDAY SHOPPING
+      +spacer(86)
+      +text($_t__11_26_regular_normal)(rootTag="tr" align="center" style=`color: ${$_c__black};`) *Offer valid until the end of this month.
+      +spacer(5)
+      +button('#', button__style_black, button__text_size_default)(width=558 height=42 rootTag="tr") SHOP THE LATEST >
+    +spacer(2)(rootTag="table")
+    +text($_t__11_26_regular_normal)(rootTag="table" align="center" style=`color: ${$_c__black}; font-family: ${$_t__font__georgia};`) To view your account and loyalty points, please&nbsp;
+      a(href="#" style="text-decoration: underline !important;") click here.
+    +spacer(10)(rootTag="table")

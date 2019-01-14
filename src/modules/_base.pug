@@ -19,15 +19,90 @@ block vars
     };
 
 doctype html
-html
+html(xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office")
   head
     title=$title
-    meta(name='viewport', content='width=610')
+    | <!--[if gte mso 9]><xml>
+    |  <o:OfficeDocumentSettings>
+    |   <o:AllowPNG/>
+    |   <o:PixelsPerInch>96</o:PixelsPerInch>
+    |  </o:OfficeDocumentSettings>
+    | </xml><![endif]-->
+    meta(name='viewport', content='width=device-width')
     meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
     meta(content='telephone=no', name='format-detection')
     +ifMso()
       meta(http-equiv='X-UA-Compatible', content='IE=edge')
       style(type='text/css').
+        * {-webkit-text-size-adjust: none}
+
+        #outlook a {
+          padding: 0;
+        }
+
+        .ReadMsgBody {
+          width: 100%;
+        }
+
+        body {
+          width: 100% !important;
+          min-width: 100%;
+          -webkit-text-size-adjust: 100%;
+          -ms-text-size-adjust: 100%;
+        }
+
+        .ExternalClass {
+          width: 100%;
+        }
+
+        td {
+          border-collapse: collapse !important;
+        }
+
+        v * {
+          behavior: url(#default#VML);
+          display: inline-block;
+        }
+
+        .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {
+          line-height: 100%;
+        }
+
+        a img {
+          border: none;
+        }
+
+        img {
+          display: block;
+        }
+
+        table {
+          border-spacing: 0;
+          border-collapse: collapse;
+        }
+
+        p {
+          margin: 0;
+          padding: 0;
+          border: 0;
+          font-size: 100%;
+          line-height: 1.2em;
+          font-family: Helvetica, Arial, sans-serif;
+        }
+
+        #wrappertable {
+          margin: 0;
+          padding: 0;
+          width: 100% !important;
+          line-height: 100% !important;
+        }
+
+        @media screen and (max-width: 480px) {
+          table {
+            width: 100% !important;
+          }
+
+        }
         table, table tr, table td, table img {
           border-collapse: collapse;
           mso-table-lspace: 0pt;
@@ -49,7 +124,7 @@ html
         text-decoration: none !important;
         font-size: inherit !important;
         font-family: inherit !important;
-        ` font-weight: inherit !important;
+        font-weight: inherit !important;
         line-height: inherit !important;
       }
 
@@ -67,6 +142,7 @@ html
       //- Params in head for different metrics
   body(
       marginwidth='0', marginheight='0', leftmargin='0', topmargin='0',
+      align="center"
       style=Object.assign({},bodyDefaultStyles, {"background-color": $_c__bgColor}, bodyCustomStyles)
     )
     block contentWrapper

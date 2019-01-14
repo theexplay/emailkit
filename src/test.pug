@@ -1,0 +1,66 @@
+extends modules/_base
+
+append vars
+  - $title = "Checkout fot 15% off!"
+  - $_c__bgColor = $_c__white
+  - $_l__content_width = 560
+
+append params
+  style(type='text/css').
+    .out-link {
+      text-decoration: underline;
+      color: #000111;
+      color: #001;
+    }
+
+
+block content
+  +spacer(26)(rootTag="table")
+  | <!--[if mso]>
+  |    <table align="center" style="margin: 0 auto;"><tr align="center"><td width="600" align="center" style="margin: 0 auto;">
+  | <![endif]-->
+  +table("100%")(bgcolor=$_c__white style=`max-width: 600px;`): tr: +td
+    +table("100%")(bgcolor=$_c__white style=`border: 1px solid ${$_c__black}; max-width: ${$_l__content_width}px;`)
+      tr: +td: +table("100%")(bgcolor=$_c__black style=`max-width: ${$_l__content_width}px;padding-left: 12px;padding-right: 12px;`)
+        +spacer(26)
+        +text($_t__18_26_regular_normal)(rootTag="tr" align="center" style=`color: ${$_c__white};`) GET YOUR
+        +spacer(4)
+        +text($_t__40_44_bold_normal)(rootTag="tr" align="center" style=`color: ${$_c__white};font-family: ${$_t__font__georgia};`): i BIRTHDAY TREAT
+        +spacer(8)
+        +text($_t__18_26_regular_normal)(rootTag="tr" align="center" style=`color: ${$_c__white};`) BEFORE IT'S GONE!
+        +spacer(18)
+        tr: +td: hr(align="center" width="62%" size="2" color=$_c__white)
+        +spacer(22)
+        +text($_t__24_30_regular_normal)(rootTag="tr" align="center" style=`color: ${$_c__white}; family: ${$_t__font__georgia};`): i
+          | Receive DOUBLE LOYALTY POINTS
+          br
+          | On All Purchases
+          br
+          | During Your Birthday Month.*
+        +spacer(30)
+      tr: +td: +table("100%")(style="padding-left: 12px;padding-right:12px;")
+        +spacer(30)
+        +banner(175, 215, 'https://firebasestorage.googleapis.com/v0/b/test-b069a.appspot.com/o/photo5229005310469974610.jpg?alt=media&token=ed0a9981-5484-429f-b98d-a9582970d4cc')(rootTag="tr" align="center" rootAlign="center")
+        +spacer(30)
+        +text($_t__18_26_regular_normal)(rootTag="tr" align="center" style=`color: ${$_c__black};`)
+          | “The party’s almost over, so make sure to earn those points
+          br
+          | and treat yourself to something nice. Happy Birthday!”
+        +spacer(54)
+        +button('#', button__style_black, button__text_size_default)(width=288 height=42 rootTag="tr") GO BIRTHDAY SHOPPING
+        +spacer(86)
+        +text($_t__11_26_regular_normal)(rootTag="tr" align="center" style=`color: ${$_c__black};`) *Offer valid until the end of this month.
+        +spacer(5)
+      +button('#', button__style_black, button__text_size_default)(width="100%" height=42 rootTag="tr") SHOP THE LATEST >
+    +spacer(2)(rootTag="table")
+    +table("100%")(align="center"): tr: +td()(align="center" style=`color: ${$_c__black};font-size: 11px;font-family: ${$_t__font__georgia};line-height: 14px;text-align: center;`)
+      | To view your account and loyalty points, please&nbsp;
+      a(href="https://ya.ru/" target="_blank" class="out-link" style="display: inline-block;text-decoration: underline !important; color: #000111 !important;")
+        span(style="text-decoration: underline !important; color: #000111 !important; display: inline-block;")
+          | click here
+      |.
+    +spacer(10)(rootTag="table")
+  | <!--[if mso]>
+  |    </td></tr></table>
+  | <![endif]-->
+  +spacer(26)(rootTag="table")
